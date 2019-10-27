@@ -1,7 +1,7 @@
 importScripts('js/sw-utils.js');
 
 const CACHE_STATIC = 'static-v2';
-const CACHE_DYNAMIC = 'synamic-v1';
+const CACHE_DYNAMIC = 'dynamic-v2';
 const CACHE_INMUTABLE = 'inmutable-v1';
 
 const APP_SHELL = [
@@ -44,6 +44,9 @@ self.addEventListener('activate', e => {
     const borrarCache = caches.keys().then(keys => {
         keys.forEach(key => {
             if (key != CACHE_STATIC && keys.includes('static-')) {
+                return caches.delete(key);
+            }
+            if (key != CACHE_DYNAMIC && keys.includes('dynamic-')) {
                 return caches.delete(key);
             }
         });
