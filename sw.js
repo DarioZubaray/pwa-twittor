@@ -15,7 +15,7 @@ const APP_SHELL = [
     'img/avatars/thor.jpg',
     'img/avatars/wolverine.jpg',
     '/js/app.js',
-    'js/sw-utils.js'
+    '/js/sw-utils.js'
 ];
 
 const APP_SHELL_INMUTABLE = [
@@ -56,14 +56,15 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-    caches.match(e.request).then(res => {
+    const respuestaFetch = caches.match(e.request).then(res => {
         if (res) {
             return res;
         } else {
             return fetch(e.request).then(newResp => {
-                return actualizaCacheDinamico(CACHE_DYNAMIC, e.request, newResp);
+                return actualizarCache(CACHE_DYNAMIC, e.request, newResp);
             });
         }
     });
-    e.respondWith(e.request.url);
+
+    e.respondWith(respuestaFetch);
 });
