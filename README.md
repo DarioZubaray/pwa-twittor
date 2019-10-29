@@ -1,6 +1,19 @@
-# Chat de Héroes
+# Notas:
 
-Un cascarón de chat usando [jQuery](https://jquery.com/) (v3.3.1) para [PWAs](https://developers.google.com/web/fundamentals/codelabs/your-first-pwapp/?hl=es)
+Este es un pequeño servidor de express listo para ejecutarse y servir la carpeta public en la web.
 
-- [fontawesome](https://fontawesome.com/) (v5.3.1)
-- [animate.css](https://daneden.github.io/animate.css/) (Version - 3.7.0)
+Recuerden que deben de reconstruir los módulos de node con el comando
+
+```
+npm install
+```
+
+Luego, para correr en producción
+```
+npm start
+```
+
+Para correr en desarrollo
+```
+npm run dev
+```
