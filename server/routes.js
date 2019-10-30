@@ -1,21 +1,22 @@
 // Routes.js - Módulo de rutas
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const push = require('./push');
 
 
 const mensajesDB = [
   {
-    _id: 'XXX',
+    _id: '001',
     user: 'spiderman',
     mensaje: 'Hola mundo!'
   },
   {
-    _id: 'XXX',
-    user: 'iroman',
+    _id: '002',
+    user: 'ironman',
     mensaje: 'Hola mundo!'
   },
   {
-    _id: 'XXX',
+    _id: '003',
     user: 'hulk',
     mensaje: 'Hola mundo!'
   }
@@ -39,6 +40,23 @@ router.post('/', function (req, res) {
     ok: true,
     mensajes: mensajesDB
   });
+});
+
+router.get('/key', (req, res) => {
+  const key = push.getKey()
+
+  res.send(key);
+});
+
+// almacenar la subscripcion
+router.post('/subscribe', (req, res) => {
+
+  res.json('subscribe');
+});
+
+router.post('/push', (req, res) => {
+
+  res.json('Enviar una notificacion a todos las personas');
 });
 
 
