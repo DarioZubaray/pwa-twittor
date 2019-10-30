@@ -2,7 +2,7 @@
 var url = window.location.href;
 var swLocation = '/twittor/sw.js';
 
-
+var swReg;
 if ( navigator.serviceWorker ) {
 
 
@@ -11,7 +11,13 @@ if ( navigator.serviceWorker ) {
     }
 
 
-    navigator.serviceWorker.register( swLocation );
+    window.addEventListener('load', e => {
+        navigator.serviceWorker.register( swLocation ).then (reg => {
+            swReg = reg;
+
+            swReg.pushManager.getSubscription().then( verificaSubscripcion );
+        });
+    });
 }
 
 
@@ -32,6 +38,9 @@ var modal       = $('#modal');
 var modalAvatar = $('#modal-avatar');
 var avatarBtns  = $('.seleccion-avatar');
 var txtMensaje  = $('#txtMensaje');
+
+var btnActivadas = $('.btn-noti-activadas');
+var btnDesactividas = $('.btn-noti-desactivadas');
 
 // El usuario, contiene el ID del hÃ©roe seleccionado
 var usuario;
@@ -160,8 +169,23 @@ postBtn.on('click', function() {
 });
 
 // Obtener mensajes del servidor
+function verificaSubscripcion(activadas) {
+    if (activadas) {
+        btnActivadas.removeClass('oculto');
+        btnDesactividas.addClass('oculto');
+    } else {
+        btnActivadas.addClass('oculto');
+        btnDesactividas.removeClass('oculto');
+    }
+}
+
 function getMensajes() {
-    fetch('api').then(resp => resp.json).then(posteos => {
+    fetch('api')
+    .then(resp => {
+        console.log(resp);
+        return resp.json();
+    })
+    .then(posteos => {
         posteos.forEach(post => {
             crearMensajeHTML(post.mensaje, post.user);
         });
@@ -184,3 +208,45 @@ function isOnline() {
 
 window.addEventListener('online', isOnline());
 window.addEventListener('offline', isOnline());
+
+isOnline();
+
+
+// Notificaciones
+function enviarNotificacion(mensaje) {
+    const notificationOpt = {
+        body: 'este es el cuerpo de la notificacion',
+        icon: 'img/icons/icon-72x72.png'
+    }
+    const n = new Notification(mensaje, notificationOpt);
+    n.onclick = () => {
+        console.log('click');
+    }
+}
+
+function notificame() {
+    if (!window.Notification) {
+        console.log('Este navegador no acepta notificaciones :(');
+        return;
+    }
+
+    if (Notification.permission === 'granted') {
+        enviarNotificacion('Hola mundo! -granted!');
+    } else if (Notification.permission !== 'denied' || Notification.permission === 'default') {
+        Notification.requestPermission(function(permission) {
+            console.log(permission);
+            if (permission === 'granted') {
+                enviarNotificacion('Hola mundo - pregunta');
+            }
+        });
+    }
+}
+
+
+function getPublicKey() {
+
+    return fetch('api/key')
+        .then(resp => resp.arrayBuffer())
+        .then(new Uint8Array);
+}
+
