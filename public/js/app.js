@@ -250,3 +250,18 @@ function getPublicKey() {
         .then(new Uint8Array);
 }
 
+btnDesactivadas.on('click', function() {
+    if (!swReg) return console.log('No hay registro del sw');
+
+    getPublicKey().then(function(key) {
+        swReg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: key
+        }).then(resp => resp.toJSON())
+        .then(function(subcripcion) {
+
+            fetch('api/subscribe')
+            verificaSubscripcion(subcripcion);
+        });
+    });
+});
