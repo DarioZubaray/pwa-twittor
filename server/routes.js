@@ -3,61 +3,89 @@ const express = require('express');
 const router = express.Router();
 const push = require('./push');
 
+const mensajes = [
 
-const mensajesDB = [
   {
-    _id: '001',
+    _id: 'XXX',
     user: 'spiderman',
-    mensaje: 'Hola mundo!'
-  },
-  {
-    _id: '002',
-    user: 'ironman',
-    mensaje: 'Hola mundo!'
-  },
-  {
-    _id: '003',
-    user: 'hulk',
-    mensaje: 'Hola mundo!'
+    mensaje: 'Hola Mundo'
   }
+
 ];
+
 
 // Get mensajes
 router.get('/', function (req, res) {
-  res.json(mensajesDB);
+  // res.json('Obteniendo mensajes');
+  res.json( mensajes );
 });
 
-// Post mensajes
+
+// Post mensaje
 router.post('/', function (req, res) {
-  const msj = {
+  
+  const mensaje = {
     mensaje: req.body.mensaje,
     user: req.body.user
-  }
+  };
 
-  mensajesDB.push(msj);
+  mensajes.push( mensaje );
+
+  console.log(mensajes);
+
 
   res.json({
     ok: true,
-    mensajes: mensajesDB
+    mensaje
   });
 });
 
-router.get('/key', (req, res) => {
-  const key = push.getKey()
 
-  res.send(key);
-});
-
-// almacenar la subscripcion
+// Almacenar la suscripción
 router.post('/subscribe', (req, res) => {
 
+
+  const suscripcion = req.body;
+
+  
+  push.addSubscription( suscripcion );
+
+
   res.json('subscribe');
+
 });
 
+// Almacenar la suscripción
+router.get('/key', (req, res) => {
+
+  const key = push.getKey();
+
+
+  res.send(key);
+
+});
+
+
+// Envar una notificación PUSH a las personas
+// que nosotros queramos
+// ES ALGO que se controla del lado del server
 router.post('/push', (req, res) => {
 
-  res.json('Enviar una notificacion a todos las personas');
+  const post = {
+    titulo: req.body.titulo,
+    cuerpo: req.body.cuerpo,
+    usuario: req.body.usuario
+  };
+
+
+  push.sendPush( post );
+
+  res.json( post );
+
 });
+
+
+
 
 
 module.exports = router;

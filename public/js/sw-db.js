@@ -1,37 +1,60 @@
+// Utilidades para grabar PouchDB
+const db = new PouchDB('mensajes');
 
-const db = PouchDB('mensajes');
 
 function guardarMensaje( mensaje ) {
+
     mensaje._id = new Date().toISOString();
 
-    return db.put(mensaje).then( () => {
+    return db.put( mensaje ).then( () => {
+
         self.registration.sync.register('nuevo-post');
 
-        console.log('Mensaje guardado para posterior posteo');
-        const newResp = {ok: true, offline: true};
-        return new Response(JSON.stringify(newResp));
+        const newResp = { ok: true, offline: true };
+
+        return new Response( JSON.stringify(newResp) );
+
     });
+
 }
 
+
+// Postear mensajes a la API
 function postearMensajes() {
+
     const posteos = [];
 
-    return db.alldocs({include_docs: true}).then(docs => {
-        docs.rows.forEach(row => {
-            const documento = row.doc;
+    return db.allDocs({ include_docs: true }).then( docs => {
 
-            const fetchProm = fetch('api', {
-                method: 'POST', 
+
+        docs.rows.forEach( row => {
+
+            const doc = row.doc;
+
+            const fetchPom =  fetch('api', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(documento)
-            }).then( () => {
-                return db.remove(documento)
-            });
+                body: JSON.stringify( doc )
+                }).then( res => {
 
-            posteos.push(fetchProm);
-        });
-        return Promise.all(posteos);
+                    return db.remove( doc );
+
+                });
+            
+            posteos.push( fetchPom );
+
+
+        }); // fin del foreach
+
+        return Promise.all( posteos );
+
     });
+
+
+
+
+
 }
+

@@ -19,6 +19,7 @@
     -webkit-touch-callout: none;
 }
 
+
 /* Personalizados */
 button {
   width: 80%;
@@ -36,6 +37,8 @@ button {
 .btn-noti-desactivadas {
   background-color: red;
 }
+
+
 
 .oculto {
   display: none !important;
