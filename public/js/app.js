@@ -244,8 +244,7 @@ postBtn.on('click', function() {
         mensaje: mensaje,
         user: usuario,
         lat: lat,
-        lng: lng,
-        foto: foto
+        lng: lng
     };
 
 
@@ -260,10 +259,7 @@ postBtn.on('click', function() {
     .then( res => console.log( 'app.js', res ))
     .catch( err => console.log( 'app.js error:', err ));
 
-    camera.apagar();
-    contenedorCamara.addClass('oculto');
-
-    crearMensajeHTML( mensaje, usuario, lat, lng, foto );
+    crearMensajeHTML( mensaje, usuario, lat, lng );
     
     foto = null;
 });
@@ -482,7 +478,21 @@ function mostrarMapaModal(lat, lng) {
 btnLocation.on('click', () => {
 
     console.log('Botón geolocalización');
-    
+    if (navigator.geolocation) {
+
+        $.mdtoast('Cargando mapa...', {
+            interaction: true,
+            interactionTimeout: 2000,
+            actionText: 'ok'
+        });
+        navigator.geolocation.getCurrentPosition(pos => {
+
+            lat = pos.coords.latitude;
+            lng = pos.coords.longitude;
+
+            mostrarMapaModal(lat, lng);
+        });
+    }
 
 });
 

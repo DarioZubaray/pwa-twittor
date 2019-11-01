@@ -27,7 +27,9 @@ router.post('/', function (req, res) {
 
   const mensaje = {
     mensaje: req.body.mensaje,
-    user: req.body.user
+    user: req.body.user,
+    lat: req.body.lat,
+    lng: req.body.lng
   };
 
   mensajes.push( mensaje );
