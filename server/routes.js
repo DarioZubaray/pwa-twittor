@@ -24,6 +24,7 @@ router.get('/', function (req, res) {
 // Post mensaje
 router.post('/', function (req, res) {
   
+
   const mensaje = {
     mensaje: req.body.mensaje,
     user: req.body.user
@@ -31,7 +32,7 @@ router.post('/', function (req, res) {
 
   mensajes.push( mensaje );
 
-  console.log(mensajes);
+  // console.log(mensajes);
 
 
   res.json({
